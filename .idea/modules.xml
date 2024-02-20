@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/zarzadzanie-produkcja/zarzadzanie-produkcja.iml" filepath="$PROJECT_DIR$/zarzadzanie-produkcja/zarzadzanie-produkcja.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/zarzadzanie-produkcjaa.iml" filepath="$PROJECT_DIR$/.idea/zarzadzanie-produkcjaa.iml" />
+    </modules>
+  </component>
+</project>
