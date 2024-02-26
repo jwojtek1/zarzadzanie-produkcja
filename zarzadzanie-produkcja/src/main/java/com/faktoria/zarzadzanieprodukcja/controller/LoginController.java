@@ -1,9 +1,14 @@
 package com.faktoria.zarzadzanieprodukcja.controller;
 
+import org.springframework.context.ConfigurableApplicationContext;
+
 public class LoginController {
 
-    public void login() {
-        System.out.println("Logowanie użytkownika...");
-        // Tutaj dodaj rzeczywistą logikę logowania
+    private ConfigurableApplicationContext springContext;
+
+    public LoginController(ConfigurableApplicationContext springContext) {
+        this.springContext = springContext;
     }
+
+    // Metody klasy...
 }
