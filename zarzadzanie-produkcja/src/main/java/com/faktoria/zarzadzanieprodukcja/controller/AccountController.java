@@ -15,10 +15,18 @@ public class AccountController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void createUser(String username, String password) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password)); // Hashowanie hasła
-        userRepository.save(user);
+    // W klasie AccountController
+
+    public boolean createUser(String username, String password) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            return false; // Użytkownik o podanym loginie już istnieje
+        } else {
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setPassword(passwordEncoder.encode(password)); // Załóżmy, że hasło jest hashowane
+            userRepository.save(newUser);
+            return true;
+        }
     }
 }
+

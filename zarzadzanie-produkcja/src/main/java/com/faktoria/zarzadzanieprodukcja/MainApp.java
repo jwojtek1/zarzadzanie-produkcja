@@ -1,5 +1,6 @@
 package com.faktoria.zarzadzanieprodukcja;
 
+import com.faktoria.zarzadzanieprodukcja.controller.HelpController;
 import com.faktoria.zarzadzanieprodukcja.controller.LoginController;
 import com.faktoria.zarzadzanieprodukcja.controller.RegistrationController;
 import javafx.application.Application;
@@ -12,7 +13,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 public class MainApp extends Application {
 
+    private static Scene mainScene;
     private static ConfigurableApplicationContext springContext;
+
+    public static Scene getMainScene() {
+        return mainScene;
+    }
 
     public static void main(String[] args) {
         springContext = SpringApplication.run(SpringApp.class, args);
@@ -21,24 +27,31 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Zarządzanie Produkcją");
+        primaryStage.setTitle("Faktoria - Zarządzanie Produkcją"); //nazwa wyświetlana w oknie aplikacji
 
+        //button rejestracji użytkownika
         RegistrationController registrationController = new RegistrationController(primaryStage, springContext);
         Button btnCreateAccount = new Button("Utwórz nowe konto");
         btnCreateAccount.setOnAction(e -> primaryStage.setScene(registrationController.createRegistrationScene()));
 
+        //button logowania
         Button btnLogin = new Button("Zaloguj");
-        Button btnHelp = new Button("Pomoc");
+        LoginController loginController = springContext.getBean(LoginController.class);
+        btnLogin.setOnAction(e -> loginController.login(primaryStage));
 
-//        LoginController loginController = new LoginController();
-//
-//        btnLogin.setOnAction(e -> loginController.login());
+        //button pomoc
+        // W klasie MainApp, w metodzie start()
+        Button btnHelp = new Button("Pomoc");
+        btnHelp.setOnAction(e -> {
+            new HelpController().showHelpDialog(); // Bezpośrednie wywołanie okna dialogowego
+        });
+
 
         VBox layout = new VBox(10);
         layout.getChildren().addAll(btnCreateAccount, btnLogin, btnHelp);
 
-        Scene scene = new Scene(layout, 1024, 768);
-        primaryStage.setScene(scene);
+        mainScene = new Scene(layout, 1024, 768); // Inicjalizacja głównej sceny
+        primaryStage.setScene(mainScene);
         primaryStage.show();
     }
 
