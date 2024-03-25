@@ -6,6 +6,8 @@ import com.faktoria.zarzadzanieprodukcja.controller.RegistrationController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
@@ -43,8 +45,12 @@ public class MainApp extends Application {
         // W klasie MainApp, w metodzie start()
         Button btnHelp = new Button("Pomoc");
         btnHelp.setOnAction(e -> {
-            new HelpController().showHelpDialog(); // Bezpośrednie wywołanie okna dialogowego
+            HelpController helpController = springContext.getBean(HelpController.class);
+            helpController.showHelpDialog();
         });
+
+
+
 
 
         VBox layout = new VBox(10);
