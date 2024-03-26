@@ -1,5 +1,6 @@
 package com.faktoria.zarzadzanieprodukcja.controller;
 
+import com.faktoria.zarzadzanieprodukcja.model.UserSession;
 import com.faktoria.zarzadzanieprodukcja.repository.UserRepository;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,12 +23,34 @@ public class LoginController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final UserSession userSession;
+
     // Usunięto adnotacje @Autowired z pól klasy, ponieważ będą one wstrzyknięte przez konstruktor
-    public LoginController(ConfigurableApplicationContext springContext, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    @Autowired // Konstruktor z wstrzykniętym UserSession
+    public LoginController(ConfigurableApplicationContext springContext, UserRepository userRepository, PasswordEncoder passwordEncoder, UserSession userSession) {
         this.springContext = springContext;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userSession = userSession; // Przypisanie wstrzykniętego UserSession
     }
+
+    private boolean authenticate(String username, String password) {
+        return userRepository.findByUsername(username)
+                .map(user -> {
+                    boolean passwordMatches = passwordEncoder.matches(password, user.getPassword());
+                    if (passwordMatches) {
+                        // Aktualizacja stanu sesji po pomyślnym zalogowaniu
+                        userSession.setUserLoggedIn(true);
+                        userSession.setUsername(username);
+                        // Możesz również ustawić userId, jeśli jest potrzebne
+                        userSession.setUserId(user.getId());
+                        return true; // Pomyślne uwierzytelnienie
+                    }
+                    return false; // Nieudane uwierzytelnienie
+                })
+                .orElse(false);
+    }
+
 
     // W klasie LoginController
     public void login(Stage primaryStage) {
@@ -65,13 +89,5 @@ public class LoginController {
         loginStage.showAndWait();
     }
 
-
-    private boolean authenticate(String username, String password) {
-        return userRepository.findByUsername(username)
-                .map(user -> passwordEncoder.matches(password, user.getPassword()))
-                .orElse(false);
-    }
-
-    // Metody klasy...
 }
 

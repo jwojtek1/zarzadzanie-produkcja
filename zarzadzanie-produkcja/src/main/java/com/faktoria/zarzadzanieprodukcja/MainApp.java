@@ -3,15 +3,17 @@ package com.faktoria.zarzadzanieprodukcja;
 import com.faktoria.zarzadzanieprodukcja.controller.HelpController;
 import com.faktoria.zarzadzanieprodukcja.controller.LoginController;
 import com.faktoria.zarzadzanieprodukcja.controller.RegistrationController;
+import com.faktoria.zarzadzanieprodukcja.controller.OpenCreateListWindow;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import javax.swing.text.html.ListView;
+import java.io.File;
 
 public class MainApp extends Application {
 
@@ -49,12 +51,12 @@ public class MainApp extends Application {
             helpController.showHelpDialog();
         });
 
-
-
-
+        Button createListButton = new Button("Twórz listę");
+        OpenCreateListWindow openCreateListWindow = springContext.getBean(OpenCreateListWindow.class);
+        createListButton.setOnAction(e -> openCreateListWindow.openCreateListWindow());
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(btnCreateAccount, btnLogin, btnHelp);
+        layout.getChildren().addAll(btnCreateAccount, btnLogin, btnHelp, createListButton);
 
         mainScene = new Scene(layout, 1024, 768); // Inicjalizacja głównej sceny
         primaryStage.setScene(mainScene);
