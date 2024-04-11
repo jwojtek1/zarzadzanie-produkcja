@@ -1,5 +1,7 @@
 package com.faktoria.zarzadzanieprodukcja.model;
+
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class UserSession {
@@ -7,6 +9,7 @@ public class UserSession {
     private String username;
     private boolean loggedIn = false;
 
+    // Gettery i settery
     public boolean isUserLoggedIn() {
         return loggedIn;
     }
@@ -29,5 +32,17 @@ public class UserSession {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public void loginUser(Long userId, String username) {
+        this.userId = userId;
+        this.username = username;
+        this.loggedIn = true;
+    }
+
+    public void logoutUser() {
+        this.userId = null;
+        this.username = null;
+        this.loggedIn = false;
     }
 }

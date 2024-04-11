@@ -4,8 +4,10 @@ import com.faktoria.zarzadzanieprodukcja.controller.HelpController;
 import com.faktoria.zarzadzanieprodukcja.controller.LoginController;
 import com.faktoria.zarzadzanieprodukcja.controller.RegistrationController;
 import com.faktoria.zarzadzanieprodukcja.controller.OpenCreateListWindow;
+import com.faktoria.zarzadzanieprodukcja.model.UserSession;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -17,8 +19,9 @@ import java.io.File;
 
 public class MainApp extends Application {
 
-    private static Scene mainScene;
+
     private static ConfigurableApplicationContext springContext;
+    private static Scene mainScene;
 
     public static Scene getMainScene() {
         return mainScene;
@@ -55,12 +58,48 @@ public class MainApp extends Application {
         OpenCreateListWindow openCreateListWindow = springContext.getBean(OpenCreateListWindow.class);
         createListButton.setOnAction(e -> openCreateListWindow.openCreateListWindow());
 
+        Button btnLogout = new Button("Wyloguj");
+        btnLogout.setOnAction(e -> logoutUser(primaryStage));
+
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(btnCreateAccount, btnLogin, btnHelp, createListButton);
+        layout.getChildren().addAll(btnCreateAccount, btnLogin, btnHelp, createListButton, btnLogout);
 
         mainScene = new Scene(layout, 1024, 768); // Inicjalizacja głównej sceny
         primaryStage.setScene(mainScene);
         primaryStage.show();
+
+
+    }
+
+    private void logoutUser(Stage primaryStage) {
+        // Zakładamy, że UserSession jest komponentem Springa zarządzającym sesją użytkownika
+        UserSession userSession = springContext.getBean(UserSession.class);
+
+        // Reset stanu sesji użytkownika
+        userSession.logoutUser();
+
+        // Aktualizacja UI (opcjonalnie, w zależności od Twojej aplikacji)
+        // Na przykład, możesz ukryć lub dezaktywować przyciski dostępne tylko dla zalogowanych użytkowników
+
+        // Przekierowanie do ekranu logowania
+        // Zakładamy, że masz metodę createLoginScene() tworzącą scenę logowania
+        Scene loginScene = createLoginScene(primaryStage);
+        primaryStage.setScene(mainScene);
+        primaryStage.setTitle("Faktoria - Zarządzanie Produkcją");
+        Alert failAlert = new Alert(Alert.AlertType.INFORMATION);
+        failAlert.setTitle("Wylogowano użytkownika");
+        failAlert.setHeaderText(null);
+        failAlert.setContentText("Poprawnie wylogowano użytkownika ");
+        failAlert.showAndWait();
+    }
+
+    private Scene createLoginScene(Stage primaryStage) {
+        // Tutaj tworzenie UI dla ekranu logowania
+        VBox layout = new VBox(10);
+        Button btnLogin = new Button("Zaloguj");
+        // Dodanie logiki dla przycisku logowania, etc.
+
+        return new Scene(layout, 400, 300);
     }
 
     @Override
