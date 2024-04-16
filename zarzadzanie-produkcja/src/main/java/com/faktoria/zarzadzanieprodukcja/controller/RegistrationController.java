@@ -1,7 +1,6 @@
 package com.faktoria.zarzadzanieprodukcja.controller;
 
 import com.faktoria.zarzadzanieprodukcja.MainApp;
-import com.faktoria.zarzadzanieprodukcja.SpringApp;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -28,16 +27,11 @@ public class RegistrationController {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Hasło");
         Button submitButton = new Button("Wyślij");
-        Button returnButton = new Button("Powrót"); // Przycisk powrotu
+        Button returnButton = new Button("Powrót");
 
         submitButton.setOnAction(e -> {
             AccountController accountController = springContext.getBean(AccountController.class);
             boolean isCreated = accountController.createUser(usernameField.getText(), passwordField.getText());
-
-
-            returnButton.setOnAction(f -> {
-                primaryStage.setScene(MainApp.getMainScene()); // Powrót do głównej sceny
-            });
 
             if (isCreated) {
                 // Wyświetlenie alertu o sukcesie
@@ -57,16 +51,13 @@ public class RegistrationController {
                 errorAlert.setContentText("Użytkownik o podanej nazwie użytkownika już istnieje.");
                 errorAlert.showAndWait();
             }
-
-            returnButton.setOnAction(f -> {
-                primaryStage.setScene(MainApp.getMainScene()); // Powrót do głównej sceny
-            });
         });
 
+        returnButton.setOnAction(f -> {
+            primaryStage.setScene(MainApp.getMainScene()); // Powrót do głównej sceny
+        });
 
-
-        layout.getChildren().addAll(usernameField, passwordField, submitButton, returnButton); // Dodanie przycisku powrotu
+        layout.getChildren().addAll(usernameField, passwordField, submitButton, returnButton);
         return new Scene(layout, 1024, 768);
     }
 }
-
