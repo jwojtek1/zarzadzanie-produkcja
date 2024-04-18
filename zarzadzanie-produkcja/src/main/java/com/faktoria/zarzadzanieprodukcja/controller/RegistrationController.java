@@ -20,6 +20,10 @@ public class RegistrationController {
         this.springContext = springContext;
     }
 
+    private boolean isValidUsername(String username) {
+        return username.matches("^[a-zA-Z0-9]+$");
+    }
+
     public Scene createRegistrationScene() {
         VBox layout = new VBox(10);
         TextField usernameField = new TextField();
@@ -30,21 +34,29 @@ public class RegistrationController {
         Button returnButton = new Button("Powrót");
 
         submitButton.setOnAction(e -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+
+            if (!isValidUsername(username)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Nieprawidłowa nazwa użytkownika");
+                alert.setHeaderText("Błąd w nazwie użytkownika");
+                alert.setContentText("Nazwa użytkownika może zawierać tylko litery i cyfry, bez spacji i znaków specjalnych.");
+                alert.showAndWait();
+                return; // Zatrzymaj dalsze przetwarzanie
+            }
+
             AccountController accountController = springContext.getBean(AccountController.class);
-            boolean isCreated = accountController.createUser(usernameField.getText(), passwordField.getText());
+            boolean isCreated = accountController.createUser(username, password);
 
             if (isCreated) {
-                // Wyświetlenie alertu o sukcesie
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                 successAlert.setTitle("Rejestracja zakończona sukcesem");
                 successAlert.setHeaderText(null);
                 successAlert.setContentText("Konto zostało poprawnie założone.");
                 successAlert.showAndWait();
-
-                // Powrót do głównej sceny
                 primaryStage.setScene(MainApp.getMainScene());
             } else {
-                // Wyświetlenie alertu o błędzie
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                 errorAlert.setTitle("Błąd rejestracji");
                 errorAlert.setHeaderText(null);
@@ -52,6 +64,7 @@ public class RegistrationController {
                 errorAlert.showAndWait();
             }
         });
+
 
         returnButton.setOnAction(f -> {
             primaryStage.setScene(MainApp.getMainScene()); // Powrót do głównej sceny
