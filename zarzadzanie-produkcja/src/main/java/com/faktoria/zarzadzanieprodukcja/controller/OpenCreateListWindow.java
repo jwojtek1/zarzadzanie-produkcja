@@ -76,7 +76,7 @@ public class OpenCreateListWindow {
         if (printer != null) {
             PrinterJob job = PrinterJob.createPrinterJob();
             if (job != null && job.showPrintDialog(null)) {
-                Canvas canvas = new Canvas(600, 800);
+                Canvas canvas = new Canvas(1024, 768);
                 GraphicsContext gc = canvas.getGraphicsContext2D();
 
                 gc.setFont(Font.font("Arial", 12));

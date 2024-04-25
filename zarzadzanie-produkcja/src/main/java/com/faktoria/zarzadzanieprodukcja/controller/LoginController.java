@@ -86,7 +86,7 @@ public class LoginController {
 
         loginPane.getChildren().addAll(new Label("Login:"), usernameField, new Label("Hasło:"), passwordField, loginButton);
 
-        Scene scene = new Scene(loginPane, 300, 200);
+        Scene scene = new Scene(loginPane, 1024, 768);
         loginStage.setScene(scene);
         loginStage.showAndWait();
     }

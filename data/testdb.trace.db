@@ -260,3 +260,11 @@ select * from appuser [42102-200]
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "APP_USER" nie istnieje
 Table "APP_USER" not found; SQL statement:
 select * from app_user [42102-200]
+2024-04-23 12:54:47 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "APP_USER" nie istnieje
+Table "APP_USER" not found; SQL statement:
+SELECT * FROM app_user [42102-200]
+2024-04-23 12:55:22 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "USER" nie istnieje
+Table "USER" not found; SQL statement:
+DELETE FROM user [42102-200]

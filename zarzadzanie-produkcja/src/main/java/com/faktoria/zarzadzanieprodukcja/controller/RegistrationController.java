@@ -8,16 +8,19 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
 public class RegistrationController {
 
     private Stage primaryStage;
     private ConfigurableApplicationContext springContext;
+    private EmailService emailService;
 
-    public RegistrationController(Stage primaryStage, ConfigurableApplicationContext springContext) {
+    public RegistrationController(Stage primaryStage, ConfigurableApplicationContext springContext, EmailService emailService) {
         this.primaryStage = primaryStage;
         this.springContext = springContext;
+        this.emailService = emailService;
     }
 
     private boolean isValidUsername(String username) {
@@ -30,12 +33,15 @@ public class RegistrationController {
         usernameField.setPromptText("Login");
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Hasło");
+        TextField emailField = new TextField();
+        emailField.setPromptText("E-mail");
         Button submitButton = new Button("Wyślij");
         Button returnButton = new Button("Powrót");
 
         submitButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
+            String email = emailField.getText();
 
             if (!isValidUsername(username)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -47,9 +53,11 @@ public class RegistrationController {
             }
 
             AccountController accountController = springContext.getBean(AccountController.class);
-            boolean isCreated = accountController.createUser(username, password);
+            boolean isCreated = accountController.createUser(username, password, email);
 
             if (isCreated) {
+                emailService.sendEmail(email, "Potwierdzenie założenia konta", "Dziękujemy za założenie konta.");
+
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                 successAlert.setTitle("Rejestracja zakończona sukcesem");
                 successAlert.setHeaderText(null);
@@ -65,12 +73,11 @@ public class RegistrationController {
             }
         });
 
-
         returnButton.setOnAction(f -> {
             primaryStage.setScene(MainApp.getMainScene()); // Powrót do głównej sceny
         });
 
-        layout.getChildren().addAll(usernameField, passwordField, submitButton, returnButton);
+        layout.getChildren().addAll(usernameField, passwordField, emailField, submitButton, returnButton);
         return new Scene(layout, 1024, 768);
     }
 }

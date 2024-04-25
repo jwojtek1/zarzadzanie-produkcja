@@ -51,7 +51,7 @@ public class HelpController {
         // Tworzenie i wyświetlanie sceny
         Stage helpStage = new Stage();
         helpStage.setTitle("Pomoc");
-        helpStage.setScene(new Scene(scrollPane, 800, 600));
+        helpStage.setScene(new Scene(scrollPane, 1024, 768));
         helpStage.show();
     }
 }

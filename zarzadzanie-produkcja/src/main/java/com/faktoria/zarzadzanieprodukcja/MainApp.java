@@ -1,9 +1,6 @@
 package com.faktoria.zarzadzanieprodukcja;
 
-import com.faktoria.zarzadzanieprodukcja.controller.HelpController;
-import com.faktoria.zarzadzanieprodukcja.controller.LoginController;
-import com.faktoria.zarzadzanieprodukcja.controller.OpenCreateListWindow;
-import com.faktoria.zarzadzanieprodukcja.controller.RegistrationController;
+import com.faktoria.zarzadzanieprodukcja.controller.*;
 import com.faktoria.zarzadzanieprodukcja.model.UserSession;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,6 +29,7 @@ public class MainApp extends Application {
     private Button btnHelp;
     private Button btnCreateList;
     private Button btnLogout;
+    private Button btnUserAccount;
 
     public static void main(String[] args) {
         springContext = SpringApplication.run(SpringApp.class, args);
@@ -67,13 +65,15 @@ public class MainApp extends Application {
         btnHelp = new Button("Pomoc");
         btnCreateList = new Button("Twórz listę");
         btnLogout = new Button("Wyloguj");
+        btnUserAccount = new Button("Konto użytkownika"); // Poprawna inicjalizacja przycisku
 
-        centerBox.getChildren().addAll(btnCreateAccount, btnLogin, btnHelp, btnCreateList, btnLogout);
+
+        centerBox.getChildren().addAll(btnCreateAccount, btnLogin, btnHelp, btnCreateList, btnLogout, btnUserAccount);
         root.setCenter(centerBox);  // Dodanie centerBox do środka root
 
         setupControllers();  // Konfiguracja kontrolerów i ich akcji
 
-        mainScene = new Scene(root, 800, 600);  // Utworzenie sceny z root jako kontenerem
+        mainScene = new Scene(root, 1024, 768);  // Utworzenie sceny z root jako kontenerem
         return mainScene;
     }
 
@@ -83,7 +83,8 @@ public class MainApp extends Application {
     }
 
     private void setupControllers() {
-        RegistrationController registrationController = new RegistrationController(primaryStage, springContext);
+        EmailService emailService = springContext.getBean(EmailService.class);
+        RegistrationController registrationController = new RegistrationController(primaryStage, springContext, emailService);
         btnCreateAccount.setOnAction(e -> primaryStage.setScene(registrationController.createRegistrationScene()));
 
         LoginController loginController = springContext.getBean(LoginController.class);
@@ -97,7 +98,16 @@ public class MainApp extends Application {
 
         UserSession userSession = springContext.getBean(UserSession.class);
         btnLogout.setOnAction(e -> logoutUser(primaryStage));
+
+        btnUserAccount.setOnAction(e -> openUserAccountWindow());
     }
+
+    private void openUserAccountWindow() {
+        // Użyj nazwy klasy, gdy odwołujesz się do statycznej zmiennej z metody niestatycznej
+        UserAccountWindow userAccountWindow = new UserAccountWindow(MainApp.springContext);
+        userAccountWindow.display(primaryStage);
+    }
+
 
     private void logoutUser(Stage primaryStage) {
         UserSession userSession = springContext.getBean(UserSession.class);
@@ -111,6 +121,8 @@ public class MainApp extends Application {
         alert.setContentText("Zostałeś wylogowany.");
         alert.showAndWait();
     }
+
+
 
 
     @Override
